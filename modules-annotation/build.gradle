@@ -1,0 +1,66 @@
+apply plugin: 'java-library'
+//apply plugin: 'com.novoda.bintray-release'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+//*****************maven*******************
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: repoUrl) {
+                authentication(userName: "framework-deploy", password: "framework-deploy-112")
+            }
+
+            pom.project {
+                version libVersion
+                groupId 'com.pingan.aladdin'
+                artifactId "annotation"
+                packaging "jar"
+                description "aladdin modules"
+            }
+        }
+    }
+}
+
+def getRepoUrl() {
+    if (libVersion.endsWith("-SNAPSHOT")) {
+        return "http://maven-repo.pab.com.cn/repository/framework-snapshots/"
+    }
+    return "http://maven-repo.pab.com.cn/repository/framework-releases/"
+}
+
+def getLibVersion() {
+    return "1.0.0-SNAPSHOT"
+//    return "1.0.0T"
+}
+
+
+//
+////./gradlew clean build bintrayUpload -PbintrayUser=beyondxia -PbintrayKey=af95d6af14ef35e80d9207234f96e56445b4677b -PdryRun=false
+//allprojects {
+//    repositories {
+//        jcenter()
+//    }
+//    tasks.withType(Javadoc) {
+//        options{ encoding "UTF-8"
+//            charSet 'UTF-8'
+//            links "http://docs.oracle.com/javase/7/docs/api"
+//        }
+//    }
+//}
+//publish {
+//    repoName = 'annotation'
+//    userOrg = 'beyondxia'
+//    groupId = 'com.beyondxia.modules'
+//    artifactId = 'annotation'
+//    publishVersion = '1.0.1'
+//    desc = 'This is a annotation for modules'
+//    website = 'https://github.com/beyondxia/annotation'
+//}
